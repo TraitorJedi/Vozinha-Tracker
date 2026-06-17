@@ -8,15 +8,17 @@ A Vercel-ready Next.js app that tracks `@vozinha1` against Tom Brady's `@tombrad
 - Gap, progress-to-Brady percentage, and followers needed to pass Brady
 - Auto-refreshes every 30 seconds
 - Stores local browser snapshots so the page can show recent momentum
-- Works on Vercel with optional server-side follower data provider
+- Works on Vercel with real server-side Instagram follower data providers
 
 ## Important note about Instagram data
 
-Instagram does not provide a simple free public follower-count API for arbitrary accounts, and direct scraping can be rate-limited or blocked. This repo is set up with a clean provider layer:
+Instagram does not provide a simple free public follower-count API for arbitrary accounts, and direct scraping can be rate-limited or blocked. This repo now checks multiple real data sources before falling back to manual/demo values:
 
-1. **Recommended:** set `IG_FOLLOWER_API_URL` to your own small endpoint/provider that returns follower counts.
-2. **Fallback:** set `VOZINHA_FOLLOWERS` and `TOM_BRADY_FOLLOWERS` in Vercel env vars.
-3. **Local demo:** `.env.example` includes sample values pulled from recent public reporting.
+1. **Custom provider:** set `IG_FOLLOWER_API_URL` to your own endpoint/provider that returns both counts.
+2. **Apify provider:** set `APIFY_TOKEN` to run an Instagram follower-count actor for `vozinha1` and `tombrady`; optionally override `APIFY_INSTAGRAM_ACTOR`.
+3. **Instastatistics fallback:** enabled by default and fetches public live-count pages for `@vozinha1` and `@tombrady`; set `INSTASTATISTICS_ENABLED=false` to disable it.
+4. **Manual fallback:** set `VOZINHA_FOLLOWERS` and `TOM_BRADY_FOLLOWERS` in Vercel env vars.
+5. **Local demo:** if no source works, the app uses built-in sample values.
 
 ## Local setup
 
@@ -36,6 +38,18 @@ vercel
 ```
 
 Or import this repo/zip into Vercel.
+
+## Built-in provider order
+
+The API route tries providers in this order on every refresh:
+
+1. `IG_FOLLOWER_API_URL` with optional `IG_FOLLOWER_API_TOKEN` bearer auth.
+2. Apify, when `APIFY_TOKEN` is present.
+3. Instastatistics public pages, unless `INSTASTATISTICS_ENABLED=false`.
+4. Environment/manual values.
+5. Built-in demo values.
+
+The JSON response includes `source` so the UI shows whether the current counts came from `custom-provider`, `apify`, `instastatistics`, `env`, or `demo`.
 
 ## Custom follower API format
 
