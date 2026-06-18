@@ -127,7 +127,7 @@ export default function Home() {
       <header className="topbar">
         <div>
           <div className="brand-row">
-            <span className="brand">vozinha.fyi</span>
+            <span className="brand">vozinha.app</span>
             <Badge>instagram live</Badge>
           </div>
           <p className="eyebrow">Vozinha · Instagram followers · Live</p>
