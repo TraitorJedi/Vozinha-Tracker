@@ -1,11 +1,11 @@
 # Vozinha Tracker
 
-A Vercel-ready Next.js app that tracks `@vozinha1` against Tom Brady's `@tombrady` Instagram follower count, inspired by the live dashboard feel of musk.fyi.
+A Vercel-ready Next.js app that tracks `@vozinha1` against other celebrities.
 
 ## What it does
 
 - Big live headline counts for Vozinha and Tom Brady
-- Gap, progress-to-Brady percentage, and followers needed to pass Brady
+- Gap, progress-to-current percentage, and followers needed to pass current celebrity
 - Auto-refreshes every 30 seconds
 - Stores local browser snapshots so the page can show recent momentum
 - Works on Vercel with real server-side Instagram follower data providers
