@@ -81,7 +81,13 @@ function useFollowers() {
 
 function AccountCard({ account, highlighted = false }: { account: Account; highlighted?: boolean }) {
   return (
-    <a href={account.profileUrl} target="_blank" rel="noreferrer" className="account-link">
+    <a
+      href={account.profileUrl}
+      target="_blank"
+      rel="noreferrer"
+      className="account-link"
+      aria-label={`${account.displayName} Instagram profile`}
+    >
       <Card className={highlighted ? "account-card account-card-active" : "account-card"}>
         <CardHeader>
           <Badge>@{account.handle}</Badge>
@@ -89,13 +95,14 @@ function AccountCard({ account, highlighted = false }: { account: Account; highl
         </CardHeader>
         <CardContent>
           <strong>{compactNumber(account.followers)}</strong>
+          <p>Instagram followers</p>
         </CardContent>
       </Card>
     </a>
   );
 }
 
-function StatCard({ label, value }: { label: string; value: string }) {
+function StatCard({ label, value, description }: { label: string; value: string; description: string }) {
   return (
     <Card className="stat-card">
       <CardHeader>
@@ -103,6 +110,7 @@ function StatCard({ label, value }: { label: string; value: string }) {
       </CardHeader>
       <CardContent>
         <strong>{value}</strong>
+        <p>{description}</p>
       </CardContent>
     </Card>
   );
@@ -119,8 +127,9 @@ export default function Home() {
     <main className="shell">
       <header className="topbar">
         <div>
-          <Badge>live tracker</Badge>
+          <Badge>instagram follower tracker</Badge>
           <h1>Vozinha Tracker</h1>
+          <p className="lede">Live-style Instagram follower counts for @vozinha1 and @tombrady.</p>
         </div>
         <Button onClick={refresh} disabled={loading} aria-label="Refresh follower counts" variant="outline">
           <RefreshCw size={15} className={loading ? "spin" : ""} />
@@ -134,12 +143,15 @@ export default function Home() {
       </section>
 
       <section className="stats" aria-label="Race status">
-        <StatCard label="gap" value={compactNumber(gapAbs)} />
-        <StatCard label="needed" value={needed === 0 ? "0" : fullNumber(needed)} />
-        <StatCard label="progress" value={percent(data.progress)} />
+        <StatCard label="gap" value={compactNumber(gapAbs)} description="Instagram followers separating the two accounts." />
+        <StatCard label="needed" value={needed === 0 ? "0" : fullNumber(needed)} description="Followers Vozinha needs to move ahead." />
+        <StatCard label="progress" value={percent(data.progress)} description="Vozinha followers as a share of Tom Brady followers." />
       </section>
 
-      <Progress value={data.progress} aria-label="Progress to Tom Brady" />
+      <div className="progress-group">
+        <Progress value={data.progress} aria-label="Instagram follower progress to Tom Brady" />
+        <p>Progress compares Vozinha Instagram followers against Tom Brady current count.</p>
+      </div>
 
       {(error || data.warning) && <p className="warning">{error ?? data.warning}</p>}
 

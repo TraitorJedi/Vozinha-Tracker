@@ -55,6 +55,13 @@ h1 {
   letter-spacing: -0.06em;
 }
 
+.lede {
+  max-width: 520px;
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 15px;
+}
+
 .btn {
   border: 1px solid transparent;
   border-radius: 999px;
@@ -131,6 +138,13 @@ h1 {
   display: block;
 }
 
+.card-content p {
+  margin: 8px 0 0;
+  color: var(--muted-foreground);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .account-link { display: block; }
 
 .ticker {
@@ -178,9 +192,18 @@ h1 {
   overflow-wrap: anywhere;
 }
 
+.progress-group {
+  margin-top: 12px;
+}
+
+.progress-group p {
+  margin: 8px 0 0;
+  color: var(--muted-foreground);
+  font-size: 13px;
+}
+
 .progress {
   height: 8px;
-  margin-top: 12px;
   border-radius: 999px;
   background: var(--card);
   overflow: hidden;
