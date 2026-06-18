@@ -129,7 +129,7 @@ export default function Home() {
         <div>
           <div className="brand-row">
             <span className="brand">vozinha.fyi</span>
-            <Badge>market closed</Badge>
+            <Badge>instagram live</Badge>
           </div>
           <p className="eyebrow">Vozinha · Instagram followers · Live</p>
           <h1>Vozinha Tracker</h1>
