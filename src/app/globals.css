@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap");
+
 :root {
   color-scheme: dark;
   --background: #000403;
@@ -28,7 +30,7 @@ body {
 }
 
 body {
-  font-family: "SFMono-Regular", "Roboto Mono", "Cascadia Code", "Liberation Mono", ui-monospace, monospace;
+  font-family: "JetBrains Mono", "SFMono-Regular", "Roboto Mono", "Cascadia Code", "Liberation Mono", ui-monospace, monospace;
 }
 
 a { color: inherit; text-decoration: none; }
@@ -273,4 +275,60 @@ footer {
   .ticker,
   .stats { grid-template-columns: 1fr; }
   .account-card { min-height: 185px; }
+}
+
+.was-here {
+  margin-top: 18px;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 18px;
+}
+
+.was-here h2 {
+  margin: 14px 0 0;
+  color: var(--primary);
+  font-size: clamp(28px, 6vw, 56px);
+  line-height: 0.95;
+  letter-spacing: -0.07em;
+}
+
+.was-here p,
+.success {
+  color: var(--muted-foreground);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.was-here p {
+  max-width: 650px;
+  margin: 12px 0 0;
+}
+
+.success {
+  margin: 14px 0 0;
+  color: var(--primary);
+}
+
+@media (max-width: 720px) {
+  .was-here { grid-template-columns: 1fr; }
+  .was-here .btn { width: 100%; }
+}
+
+
+.coming-soon-button:disabled {
+  background: #2d2f38;
+  border-color: #3a3d48;
+  color: #c1c4cf;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.coming-soon-label {
+  color: #8f94a3;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }

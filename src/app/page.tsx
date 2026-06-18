@@ -1,6 +1,6 @@
 "use client";
 
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -122,7 +122,6 @@ export default function Home() {
   const brady = getAccount(data, "tombrady");
   const gapAbs = Math.abs(data.gap);
   const needed = Math.max(0, data.gap + 1);
-
   return (
     <main className="shell">
       <header className="topbar">
@@ -156,6 +155,19 @@ export default function Home() {
         <Progress value={data.progress} aria-label="Instagram follower progress to Tom Brady" />
       </div>
 
+      <section className="was-here card" aria-label="I was here coming soon">
+        <div>
+          <Badge>coming soon</Badge>
+          <h2>I was here at {fullNumber(vozinha.followers)} followers</h2>
+          <p>
+            Soon you’ll be able to mark the moment with a Vozinha.app product using the live @vozinha1 follower count.
+          </p>
+        </div>
+        <Button disabled size="lg" className="coming-soon-button" aria-label="I was here feature coming soon">
+          <ShoppingBag size={17} />
+          I was here... <span className="coming-soon-label">coming soon</span>
+        </Button>
+      </section>
       {(error || data.warning) && <p className="warning">{error ?? data.warning}</p>}
 
       <footer>

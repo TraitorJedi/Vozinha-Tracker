@@ -77,3 +77,33 @@ If your provider requires a token, set `IG_FOLLOWER_API_TOKEN`; the API route wi
 - `src/app/page.tsx` — main dashboard UI
 - `src/app/api/followers/route.ts` — follower data endpoint/provider logic
 - `src/app/globals.css` — visual styling
+
+## Printful "I was here" products
+
+The dashboard includes a product picker that snapshots the current `@vozinha1` follower count and asks Printful to create a synced product named around `I was here at X followers`.
+
+The standard artwork text is:
+
+```txt
+I was here at X followers
+Vozinha.app
+```
+
+The app keeps approved products in `src/lib/printful-products.ts`, including product IDs, size/color variant IDs, Printful file placements, default prices, and product-specific artwork formats for apparel, mugs, posters, and stickers.
+
+Set these Vercel environment variables before using it:
+
+- `PRINTFUL_API_KEY` — your private Printful API token.
+- `PRINTFUL_STORE_ID` — optional, but recommended if your token can access more than one store.
+- `PRINTFUL_RETAIL_PRICE` — optional global override; otherwise each catalog product uses its default price.
+- `NEXT_PUBLIC_SITE_URL` — optional; use your production URL if Vercel's detected URL is not the public URL Printful should fetch artwork from.
+
+Then add variant IDs for the products you want enabled. The backend validates requests against the approved catalog and returns the exact missing variable if a selected size/color is not configured. Current catalog variables are:
+
+- Tees: `PRINTFUL_VARIANT_CLASSIC_TEE_BLACK_S`, `PRINTFUL_VARIANT_CLASSIC_TEE_BLACK_M`, `PRINTFUL_VARIANT_CLASSIC_TEE_BLACK_L`, `PRINTFUL_VARIANT_CLASSIC_TEE_BLACK_XL`, `PRINTFUL_VARIANT_CLASSIC_TEE_WHITE_S`, `PRINTFUL_VARIANT_CLASSIC_TEE_WHITE_M`, `PRINTFUL_VARIANT_CLASSIC_TEE_WHITE_L`, `PRINTFUL_VARIANT_CLASSIC_TEE_WHITE_XL`
+- Hoodies: `PRINTFUL_VARIANT_HOODIE_BLACK_S`, `PRINTFUL_VARIANT_HOODIE_BLACK_M`, `PRINTFUL_VARIANT_HOODIE_BLACK_L`, `PRINTFUL_VARIANT_HOODIE_BLACK_XL`
+- Mugs: `PRINTFUL_VARIANT_MUG_WHITE_11OZ`, `PRINTFUL_VARIANT_MUG_WHITE_15OZ`
+- Posters: `PRINTFUL_VARIANT_POSTER_12X18`, `PRINTFUL_VARIANT_POSTER_18X24`
+- Stickers: `PRINTFUL_VARIANT_STICKER_3X3`, `PRINTFUL_VARIANT_STICKER_4X4`
+
+The server generates product-specific artwork URLs such as `/api/printful/was-here-artwork?followers=9200000&format=mug-wrap` and sends the public URL to Printful, so the API key never leaves the server.
