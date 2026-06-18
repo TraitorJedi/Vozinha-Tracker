@@ -127,9 +127,13 @@ export default function Home() {
     <main className="shell">
       <header className="topbar">
         <div>
-          <Badge>instagram follower tracker</Badge>
+          <div className="brand-row">
+            <span className="brand">vozinha.fyi</span>
+            <Badge>market closed</Badge>
+          </div>
+          <p className="eyebrow">Vozinha · Instagram followers · Live</p>
           <h1>Vozinha Tracker</h1>
-          <p className="lede">Live-style Instagram follower counts for @vozinha1 and @tombrady.</p>
+          <p className="lede">Instagram follower counts for @vozinha1 and @tombrady.</p>
         </div>
         <Button onClick={refresh} disabled={loading} aria-label="Refresh follower counts" variant="outline">
           <RefreshCw size={15} className={loading ? "spin" : ""} />
@@ -150,13 +154,11 @@ export default function Home() {
 
       <div className="progress-group">
         <Progress value={data.progress} aria-label="Instagram follower progress to Tom Brady" />
-        <p>Progress compares Vozinha Instagram followers against Tom Brady current count.</p>
       </div>
 
       {(error || data.warning) && <p className="warning">{error ?? data.warning}</p>}
 
       <footer>
-        <span>{new Date(data.updatedAt).toLocaleString()}</span>
         <Badge>{data.source}</Badge>
       </footer>
     </main>
