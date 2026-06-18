@@ -2,6 +2,10 @@
 
 import { RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { compactNumber, fullNumber, percent } from "@/lib/format";
 
 type Account = {
@@ -75,6 +79,35 @@ function useFollowers() {
   return { data, loading, error, refresh };
 }
 
+function AccountCard({ account, highlighted = false }: { account: Account; highlighted?: boolean }) {
+  return (
+    <a href={account.profileUrl} target="_blank" rel="noreferrer" className="account-link">
+      <Card className={highlighted ? "account-card account-card-active" : "account-card"}>
+        <CardHeader>
+          <Badge>@{account.handle}</Badge>
+          <CardTitle>{account.displayName}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <strong>{compactNumber(account.followers)}</strong>
+        </CardContent>
+      </Card>
+    </a>
+  );
+}
+
+function StatCard({ label, value }: { label: string; value: string }) {
+  return (
+    <Card className="stat-card">
+      <CardHeader>
+        <Badge>{label}</Badge>
+      </CardHeader>
+      <CardContent>
+        <strong>{value}</strong>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function Home() {
   const { data, loading, error, refresh } = useFollowers();
   const vozinha = getAccount(data, "vozinha1");
@@ -85,48 +118,34 @@ export default function Home() {
   return (
     <main className="shell">
       <header className="topbar">
-        <h1>Vozinha Tracker</h1>
-        <button onClick={refresh} disabled={loading} aria-label="Refresh follower counts">
+        <div>
+          <Badge>live tracker</Badge>
+          <h1>Vozinha Tracker</h1>
+        </div>
+        <Button onClick={refresh} disabled={loading} aria-label="Refresh follower counts" variant="outline">
           <RefreshCw size={15} className={loading ? "spin" : ""} />
           refresh
-        </button>
+        </Button>
       </header>
 
       <section className="ticker" aria-label="Follower counts">
-        <a className="ticker-card active" href={vozinha.profileUrl} target="_blank" rel="noreferrer">
-          <span>@{vozinha.handle}</span>
-          <strong>{compactNumber(vozinha.followers)}</strong>
-        </a>
-        <a className="ticker-card" href={brady.profileUrl} target="_blank" rel="noreferrer">
-          <span>@{brady.handle}</span>
-          <strong>{compactNumber(brady.followers)}</strong>
-        </a>
+        <AccountCard account={vozinha} highlighted />
+        <AccountCard account={brady} />
       </section>
 
       <section className="stats" aria-label="Race status">
-        <div>
-          <span>gap</span>
-          <strong>{compactNumber(gapAbs)}</strong>
-        </div>
-        <div>
-          <span>needed</span>
-          <strong>{needed === 0 ? "0" : fullNumber(needed)}</strong>
-        </div>
-        <div>
-          <span>progress</span>
-          <strong>{percent(data.progress)}</strong>
-        </div>
+        <StatCard label="gap" value={compactNumber(gapAbs)} />
+        <StatCard label="needed" value={needed === 0 ? "0" : fullNumber(needed)} />
+        <StatCard label="progress" value={percent(data.progress)} />
       </section>
 
-      <div className="progress-bar" aria-label="Progress to Tom Brady">
-        <div style={{ width: `${Math.min(100, data.progress)}%` }} />
-      </div>
+      <Progress value={data.progress} aria-label="Progress to Tom Brady" />
 
       {(error || data.warning) && <p className="warning">{error ?? data.warning}</p>}
 
       <footer>
         <span>{new Date(data.updatedAt).toLocaleString()}</span>
-        <span>{data.source}</span>
+        <Badge>{data.source}</Badge>
       </footer>
     </main>
   );
