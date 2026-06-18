@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { compactNumber, fullNumber, percent } from "@/lib/format";
-import { PRINTFUL_PRODUCTS } from "@/lib/printful-products";
 
 type Account = {
   handle: "vozinha1" | "tombrady";
@@ -51,18 +50,6 @@ const fallbackData: FollowerResponse = {
 function getAccount(data: FollowerResponse, handle: Account["handle"]) {
   return data.accounts.find((account) => account.handle === handle)!;
 }
-
-type PrintfulProductResponse = {
-  product?: {
-    id?: number;
-    name?: string;
-    thumbnail_url?: string | null;
-  };
-  artworkUrl?: string;
-  selection?: { productName: string; variantLabel: string };
-  error?: string;
-  missing?: string[];
-};
 
 function useFollowers() {
   const [data, setData] = useState<FollowerResponse>(fallbackData);
@@ -135,51 +122,6 @@ export default function Home() {
   const brady = getAccount(data, "tombrady");
   const gapAbs = Math.abs(data.gap);
   const needed = Math.max(0, data.gap + 1);
-  const [creatingProduct, setCreatingProduct] = useState(false);
-  const [productMessage, setProductMessage] = useState<string | null>(null);
-  const [selectedProductId, setSelectedProductId] = useState(PRINTFUL_PRODUCTS[0].id);
-  const selectedProduct = PRINTFUL_PRODUCTS.find((product) => product.id === selectedProductId) ?? PRINTFUL_PRODUCTS[0];
-  const [selectedVariantId, setSelectedVariantId] = useState(selectedProduct.variants[0].id);
-  const selectedVariant = selectedProduct.variants.find((variant) => variant.id === selectedVariantId) ?? selectedProduct.variants[0];
-
-  function chooseProduct(productId: string) {
-    const product = PRINTFUL_PRODUCTS.find((item) => item.id === productId) ?? PRINTFUL_PRODUCTS[0];
-    setSelectedProductId(product.id);
-    setSelectedVariantId(product.variants[0].id);
-  }
-
-  async function createWasHereProduct() {
-    try {
-      setCreatingProduct(true);
-      setProductMessage(null);
-      const response = await fetch("/api/printful/was-here", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          followers: vozinha.followers,
-          productId: selectedProduct.id,
-          variantId: selectedVariant.id
-        })
-      });
-      const payload = (await response.json()) as PrintfulProductResponse;
-
-      if (!response.ok) {
-        const missing = payload.missing?.length ? ` Missing: ${payload.missing.join(", ")}.` : "";
-        throw new Error(`${payload.error ?? "Unable to create product."}${missing}`);
-      }
-
-      setProductMessage(
-        `Created ${payload.selection?.productName ?? selectedProduct.name} (${payload.selection?.variantLabel ?? selectedVariant.label}) product #${
-          payload.product?.id ?? "new"
-        } for ${fullNumber(vozinha.followers)} followers.`
-      );
-    } catch (err) {
-      setProductMessage(err instanceof Error ? err.message : "Unable to create Printful product.");
-    } finally {
-      setCreatingProduct(false);
-    }
-  }
-
   return (
     <main className="shell">
       <header className="topbar">
@@ -213,45 +155,19 @@ export default function Home() {
         <Progress value={data.progress} aria-label="Instagram follower progress to Tom Brady" />
       </div>
 
-      <section className="was-here card" aria-label="Create an I was here product">
+      <section className="was-here card" aria-label="I was here coming soon">
         <div>
-          <Badge>printful</Badge>
+          <Badge>coming soon</Badge>
           <h2>I was here at {fullNumber(vozinha.followers)} followers</h2>
           <p>
-            Create a limited product using the current live @vozinha1 follower count. Every layout anchors the brand with
-            Vozinha.app and uses the standard “I was here at X followers” design system.
+            Soon you’ll be able to mark the moment with a Vozinha.app product using the live @vozinha1 follower count.
           </p>
-          <div className="product-picker" aria-label="Choose a Printful product">
-            <label>
-              Product
-              <select value={selectedProduct.id} onChange={(event) => chooseProduct(event.target.value)}>
-                {PRINTFUL_PRODUCTS.map((product) => (
-                  <option key={product.id} value={product.id}>
-                    {product.name} · {product.category}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Size / color
-              <select value={selectedVariant.id} onChange={(event) => setSelectedVariantId(event.target.value)}>
-                {selectedProduct.variants.map((variant) => (
-                  <option key={variant.id} value={variant.id}>
-                    {variant.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <p className="product-description">{selectedProduct.description}</p>
         </div>
-        <Button onClick={createWasHereProduct} disabled={creatingProduct || loading} size="lg">
+        <Button disabled size="lg" className="coming-soon-button" aria-label="I was here feature coming soon">
           <ShoppingBag size={17} />
-          {creatingProduct ? "creating..." : `make ${selectedProduct.name.toLowerCase()}`}
+          I was here... <span className="coming-soon-label">coming soon</span>
         </Button>
       </section>
-
-      {productMessage && <p className={productMessage.toLowerCase().includes("created") ? "success" : "warning"}>{productMessage}</p>}
       {(error || data.warning) && <p className="warning">{error ?? data.warning}</p>}
 
       <footer>
